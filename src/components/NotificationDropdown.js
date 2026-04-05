@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { withHistory } from "@openimis/fe-core";
 import NotificationItem from "./NotificationItem";
-import { markAsRead, markAllAsRead } from "../actions";
+import { gqlMarkAsRead, gqlMarkAllAsRead } from "../actions";
 
 const styles = (theme) => ({
   root: {
@@ -62,7 +62,7 @@ function NotificationDropdown({
 }) {
   const handleClick = (notification) => {
     if (!notification.is_read) {
-      dispatch(markAsRead(notification.id));
+      dispatch(gqlMarkAsRead(notification.id));
     }
     if (notification.entity_url) {
       history.push(notification.entity_url);
@@ -71,7 +71,7 @@ function NotificationDropdown({
 
   const handleMarkAllRead = (e) => {
     e.preventDefault();
-    dispatch(markAllAsRead());
+    dispatch(gqlMarkAllAsRead());
   };
 
   const today = new Date().toDateString();

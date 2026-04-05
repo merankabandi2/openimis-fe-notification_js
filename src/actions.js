@@ -1,4 +1,4 @@
-import { baseApiUrl } from "@openimis/fe-core";
+import { baseApiUrl, graphql } from "@openimis/fe-core";
 
 const REQUEST = (actionType) => `${actionType}_REQ`;
 const SUCCESS = (actionType) => `${actionType}_RESP`;
@@ -133,6 +133,64 @@ export function fetchPreferences() {
       .catch((err) =>
         dispatch({ type: ERROR(ACTION_TYPE.FETCH_PREFERENCES), payload: err })
       );
+  };
+}
+
+// --- GQL mutation actions (alternative to REST) ---
+
+const GQL_MARK_NOTIFICATION_READ = `
+  mutation MarkNotificationRead($notificationId: UUID!) {
+    markNotificationRead(notificationId: $notificationId) {
+      success
+    }
+  }
+`;
+
+const GQL_MARK_ALL_NOTIFICATIONS_READ = `
+  mutation MarkAllNotificationsRead {
+    markAllNotificationsRead {
+      success
+      count
+    }
+  }
+`;
+
+export function gqlMarkAsRead(notificationId) {
+  return (dispatch) => {
+    dispatch({ type: REQUEST(ACTION_TYPE.MARK_AS_READ), meta: { notificationId } });
+    return graphql(
+      GQL_MARK_NOTIFICATION_READ,
+      { notificationId },
+    ).then((data) => {
+      if (data?.markNotificationRead?.success) {
+        dispatch({
+          type: SUCCESS(ACTION_TYPE.MARK_AS_READ),
+          meta: { notificationId },
+        });
+      } else {
+        dispatch({ type: ERROR(ACTION_TYPE.MARK_AS_READ), payload: "Notification not found" });
+      }
+    }).catch((err) =>
+      dispatch({ type: ERROR(ACTION_TYPE.MARK_AS_READ), payload: err })
+    );
+  };
+}
+
+export function gqlMarkAllAsRead() {
+  return (dispatch) => {
+    dispatch({ type: REQUEST(ACTION_TYPE.MARK_ALL_AS_READ) });
+    return graphql(
+      GQL_MARK_ALL_NOTIFICATIONS_READ,
+      {},
+    ).then((data) => {
+      if (data?.markAllNotificationsRead?.success) {
+        dispatch({ type: SUCCESS(ACTION_TYPE.MARK_ALL_AS_READ) });
+      } else {
+        dispatch({ type: ERROR(ACTION_TYPE.MARK_ALL_AS_READ), payload: "Failed" });
+      }
+    }).catch((err) =>
+      dispatch({ type: ERROR(ACTION_TYPE.MARK_ALL_AS_READ), payload: err })
+    );
   };
 }
 
