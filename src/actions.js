@@ -161,10 +161,14 @@ export function gqlMarkAsRead(notificationId) {
   return async (dispatch) => {
     dispatch({ type: REQUEST(ACTION_TYPE.MARK_AS_READ), meta: { notificationId } });
     try {
+      // Use a dedicated GQL action type, NOT ACTION_TYPE.MARK_AS_READ: passing the
+      // latter makes graphqlWithVariables auto-dispatch <type>_RESP, which the
+      // reducer also handles for the manual SUCCESS below — double-decrementing
+      // unreadCount. A distinct type keeps the auto lifecycle out of the reducer.
       const response = await dispatch(graphqlWithVariables(
         GQL_MARK_NOTIFICATION_READ,
         { notificationId },
-        ACTION_TYPE.MARK_AS_READ,
+        `${ACTION_TYPE.MARK_AS_READ}_GQL`,
       ));
       const data = response?.payload?.data;
       if (data?.markNotificationRead?.success) {
@@ -182,10 +186,12 @@ export function gqlMarkAllAsRead() {
   return async (dispatch) => {
     dispatch({ type: REQUEST(ACTION_TYPE.MARK_ALL_AS_READ) });
     try {
+      // Distinct GQL type — see gqlMarkAsRead: avoids the auto <type>_RESP
+      // colliding with the reducer's manual SUCCESS handling.
       const response = await dispatch(graphqlWithVariables(
         GQL_MARK_ALL_NOTIFICATIONS_READ,
         {},
-        ACTION_TYPE.MARK_ALL_AS_READ,
+        `${ACTION_TYPE.MARK_ALL_AS_READ}_GQL`,
       ));
       const data = response?.payload?.data;
       if (data?.markAllNotificationsRead?.success) {
