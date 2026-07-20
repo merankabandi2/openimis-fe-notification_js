@@ -32,9 +32,16 @@ function reducer(state = INITIAL_STATE, action) {
 
     case SUCCESS(ACTION_TYPE.MARK_AS_READ): {
       const id = action.meta.notificationId;
+      // Only decrement when the notification was actually unread — a second
+      // dispatch for the same id must not under-count. (Ids outside the
+      // visible list can't be checked; treat them as unread as before.)
+      const target = state.notifications.find((n) => n.id === id);
+      const alreadyRead = target ? target.is_read : false;
       return {
         ...state,
-        unreadCount: Math.max(0, state.unreadCount - 1),
+        unreadCount: alreadyRead
+          ? state.unreadCount
+          : Math.max(0, state.unreadCount - 1),
         notifications: state.notifications.map((n) =>
           n.id === id ? { ...n, is_read: true } : n
         ),
