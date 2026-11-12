@@ -1,22 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import withStyles from '@mui/styles/withStyles';
-import { IconButton, Badge, Tooltip, ClickAwayListener } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { IconButton, Badge, Tooltip, ClickAwayListener, Popper } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationDropdown from "./NotificationDropdown";
 
-const styles = () => ({
-  root: {
-    position: "relative",
-    display: "inline-block",
-  },
-  bellButton: {
-    color: "inherit",
-  },
-  badge: {
-    fontSize: "0.65rem",
-  },
+const StyledRoot = styled("div")({
+  display: "inline-block",
 });
 
 class NotificationBell extends Component {
@@ -24,39 +15,51 @@ class NotificationBell extends Component {
     open: false,
   };
 
+  anchorRef = React.createRef();
+
   handleToggle = () => {
     this.setState((prev) => ({ open: !prev.open }));
   };
 
-  handleClose = () => {
+  handleClose = (event) => {
+    if (this.anchorRef.current && this.anchorRef.current.contains(event.target)) return;
     this.setState({ open: false });
   };
 
   render() {
-    const { classes, intl, unreadCount } = this.props;
+    const { intl, unreadCount } = this.props;
     const { open } = this.state;
 
     return (
-      <ClickAwayListener onClickAway={this.handleClose}>
-        <div className={classes.root}>
-          <Tooltip
-            title={intl.formatMessage({ id: "notification.bell.tooltip" })}
-          >
-            <IconButton className={classes.bellButton} onClick={this.handleToggle} size="large">
-              <Badge
-                badgeContent={unreadCount}
-                color="error"
-                classes={{ badge: classes.badge }}
-                max={99}
-                invisible={unreadCount === 0}
-              >
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-          {open && <NotificationDropdown />}
-        </div>
-      </ClickAwayListener>
+      <StyledRoot ref={this.anchorRef}>
+        <Tooltip
+          title={intl.formatMessage({ id: "notification.bell.tooltip" })}
+        >
+          <IconButton color="inherit" onClick={this.handleToggle} size="large">
+            <Badge
+              badgeContent={unreadCount}
+              color="error"
+              sx={{ "& .MuiBadge-badge": { fontSize: "0.65rem" } }}
+              max={99}
+              invisible={unreadCount === 0}
+            >
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+        </Tooltip>
+        <Popper
+          open={open}
+          anchorEl={this.anchorRef.current}
+          placement="bottom-end"
+          sx={(theme) => ({ zIndex: theme.zIndex.modal })}
+        >
+          <ClickAwayListener onClickAway={this.handleClose}>
+            <div>
+              <NotificationDropdown />
+            </div>
+          </ClickAwayListener>
+        </Popper>
+      </StyledRoot>
     );
   }
 }
@@ -66,5 +69,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(
-  injectIntl(withStyles(styles)(NotificationBell))
+  injectIntl(NotificationBell)
 );

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import withStyles from '@mui/styles/withStyles';
+import { styled } from "@mui/material/styles";
 import {
   Paper,
   Table,
@@ -17,25 +17,23 @@ import {
 import { CATEGORY_LABELS } from "../constants";
 import { fetchPreferences, updatePreferences } from "../actions";
 
-const styles = (theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  title: {
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  "& .title": {
     fontWeight: 600,
     marginBottom: theme.spacing(2),
   },
-  categoryHeader: {
+  "& .categoryHeader": {
     backgroundColor: theme.palette.grey[100],
     fontWeight: 600,
   },
-  smsCell: {
+  "& .smsCell": {
     opacity: 0.5,
   },
-  resetButton: {
+  "& .resetButton": {
     marginTop: theme.spacing(2),
   },
-});
+}));
 
 class NotificationPreferencesPanel extends Component {
   componentDidMount() {
@@ -74,7 +72,7 @@ class NotificationPreferencesPanel extends Component {
   };
 
   render() {
-    const { classes, intl, preferences, fetchingPreferences } = this.props;
+    const { intl, preferences, fetchingPreferences } = this.props;
 
     const grouped = {};
     (preferences || []).forEach((pref) => {
@@ -83,8 +81,8 @@ class NotificationPreferencesPanel extends Component {
     });
 
     return (
-      <Paper className={classes.root}>
-        <Typography variant="h6" className={classes.title}>
+      <StyledPaper>
+        <Typography variant="h6" className="title">
           {intl.formatMessage({ id: "notification.preferences.title" })}
         </Typography>
         <Table size="small">
@@ -116,7 +114,7 @@ class NotificationPreferencesPanel extends Component {
             {Object.entries(grouped).map(([category, prefs]) => (
               <React.Fragment key={category}>
                 <TableRow>
-                  <TableCell colSpan={4} className={classes.categoryHeader}>
+                  <TableCell colSpan={4} className="categoryHeader">
                     {intl.formatMessage({
                       id: CATEGORY_LABELS[category] || category,
                     })}
@@ -153,7 +151,7 @@ class NotificationPreferencesPanel extends Component {
                         disabled={fetchingPreferences}
                       />
                     </TableCell>
-                    <TableCell align="center" className={classes.smsCell}>
+                    <TableCell align="center" className="smsCell">
                       <Tooltip
                         title={intl.formatMessage({
                           id: "notification.preferences.smsComingSoon",
@@ -173,12 +171,12 @@ class NotificationPreferencesPanel extends Component {
         <Button
           variant="outlined"
           size="small"
-          className={classes.resetButton}
+          className="resetButton"
           onClick={this.handleResetDefaults}
         >
           {intl.formatMessage({ id: "notification.preferences.resetDefaults" })}
         </Button>
-      </Paper>
+      </StyledPaper>
     );
   }
 }
@@ -189,5 +187,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(
-  injectIntl(withStyles(styles)(NotificationPreferencesPanel))
+  injectIntl(NotificationPreferencesPanel)
 );

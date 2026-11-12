@@ -16,21 +16,18 @@ const DEFAULT_CONFIG = {
   "core.AppBar": [NotificationBell],
   "core.Boot": [NotificationStreamProvider],
   "core.Router": [
-    { path: ROUTE_NOTIFICATION_PREFERENCES, component: NotificationPreferencesPage },
-  ],
-  "profile.MainMenu": [
     {
-      text: { id: "notification.preferences.title" },
-      icon: null,
-      route: "/" + ROUTE_NOTIFICATION_PREFERENCES,
+      path: ROUTE_NOTIFICATION_PREFERENCES,
       id: "notification.preferences",
+      text: "notification.preferences.title",
+      icon: "Notifications",
+      component: NotificationPreferencesPage,
     },
   ],
+  "profile.MainMenu": [{ route: ROUTE_NOTIFICATION_PREFERENCES }],
 };
 
 export const NotificationModule = (cfg) => ({
   ...DEFAULT_CONFIG,
   ...((cfg && cfg["fe-notification"]) || {}),
 });
-
-export default NotificationModule;

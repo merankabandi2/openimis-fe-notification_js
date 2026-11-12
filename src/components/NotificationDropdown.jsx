@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import withStyles from '@mui/styles/withStyles';
+import { styled } from "@mui/material/styles";
 import {
   Paper,
   Typography,
@@ -13,48 +13,41 @@ import { withHistory } from "@openimis/fe-core";
 import NotificationItem from "./NotificationItem";
 import { gqlMarkAsRead, gqlMarkAllAsRead } from "../actions";
 
-const styles = (theme) => ({
-  root: {
-    position: "absolute",
-    right: 0,
-    top: "100%",
-    width: 380,
-    maxHeight: 480,
-    overflowY: "auto",
-    zIndex: theme.zIndex.modal,
-    boxShadow: theme.shadows[8],
-    borderRadius: 8,
-  },
-  header: {
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  width: 380,
+  maxHeight: 480,
+  overflowY: "auto",
+  boxShadow: theme.shadows[8],
+  borderRadius: 8,
+  "& .header": {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "12px 16px",
   },
-  title: {
+  "& .title": {
     fontWeight: 600,
     fontSize: "0.95rem",
   },
-  markAllRead: {
+  "& .markAllRead": {
     fontSize: "0.8rem",
     cursor: "pointer",
   },
-  empty: {
+  "& .empty": {
     padding: "24px 16px",
     textAlign: "center",
     color: theme.palette.text.secondary,
   },
-  sectionLabel: {
+  "& .sectionLabel": {
     padding: "8px 16px 4px",
     fontSize: "0.75rem",
     fontWeight: 600,
     color: theme.palette.text.secondary,
     textTransform: "uppercase",
   },
-});
+}));
 
 function NotificationDropdown({
-  classes,
   intl,
   history,
   notifications,
@@ -88,14 +81,14 @@ function NotificationDropdown({
   const hasNotifications = todayNotifs.length > 0 || earlierNotifs.length > 0;
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.header}>
-        <Typography className={classes.title}>
+    <StyledPaper>
+      <div className="header">
+        <Typography className="title">
           {intl.formatMessage({ id: "notification.dropdown.title" })}
         </Typography>
         {hasNotifications && (
           <Link
-            className={classes.markAllRead}
+            className="markAllRead"
             onClick={handleMarkAllRead}
             underline="hover">
             {intl.formatMessage({ id: "notification.dropdown.markAllRead" })}
@@ -104,14 +97,14 @@ function NotificationDropdown({
       </div>
       <Divider />
       {!hasNotifications ? (
-        <Typography className={classes.empty}>
+        <Typography className="empty">
           {intl.formatMessage({ id: "notification.dropdown.empty" })}
         </Typography>
       ) : (
         <>
           {todayNotifs.length > 0 && (
             <>
-              <Typography className={classes.sectionLabel}>
+              <Typography className="sectionLabel">
                 {intl.formatMessage({ id: "notification.dropdown.today" })}
               </Typography>
               <List disablePadding>
@@ -123,7 +116,7 @@ function NotificationDropdown({
           )}
           {earlierNotifs.length > 0 && (
             <>
-              <Typography className={classes.sectionLabel}>
+              <Typography className="sectionLabel">
                 {intl.formatMessage({ id: "notification.dropdown.earlier" })}
               </Typography>
               <List disablePadding>
@@ -135,7 +128,7 @@ function NotificationDropdown({
           )}
         </>
       )}
-    </Paper>
+    </StyledPaper>
   );
 }
 
@@ -144,5 +137,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default withHistory(
-  connect(mapStateToProps)(injectIntl(withStyles(styles)(NotificationDropdown)))
+  connect(mapStateToProps)(injectIntl(NotificationDropdown))
 );

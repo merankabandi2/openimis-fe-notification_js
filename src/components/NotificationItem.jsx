@@ -1,38 +1,20 @@
 import React from "react";
 import { injectIntl } from "react-intl";
-import withStyles from '@mui/styles/withStyles';
+import { styled } from "@mui/material/styles";
 import { ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { getCategoryIcon, getCategoryColor } from "../utils/categoryIcons";
 
-const styles = (theme) => ({
-  item: {
-    cursor: "pointer",
-    "&:hover": { backgroundColor: theme.palette.action.hover },
-  },
-  unread: {
-    backgroundColor: "rgba(25, 118, 210, 0.04)",
-  },
-  categoryIcon: {
-    minWidth: 36,
-  },
-  title: {
-    fontWeight: 500,
-    fontSize: "0.85rem",
-  },
-  titleUnread: {
-    fontWeight: 700,
-  },
-  time: {
-    fontSize: "0.75rem",
-    color: theme.palette.text.secondary,
-  },
-  unreadDot: {
-    fontSize: 8,
-    marginLeft: 4,
-    color: theme.palette.primary.main,
-  },
-});
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+  cursor: "pointer",
+  "&:hover": { backgroundColor: theme.palette.action.hover },
+  "&.unread": { backgroundColor: "rgba(25, 118, 210, 0.04)" },
+  "& .categoryIcon": { minWidth: 36 },
+  "& .itemTitle": { fontWeight: 500, fontSize: "0.85rem" },
+  "& .itemTitleUnread": { fontWeight: 700 },
+  "& .itemTime": { fontSize: "0.75rem", color: theme.palette.text.secondary },
+  "& .unreadDot": { fontSize: 8, marginLeft: 4, color: theme.palette.primary.main },
+}));
 
 function formatTimeAgo(dateStr, intl) {
   const now = new Date();
@@ -48,35 +30,35 @@ function formatTimeAgo(dateStr, intl) {
   return intl.formatMessage({ id: "notification.timeAgo.daysAgo" }, { count: diffDays });
 }
 
-function NotificationItem({ classes, intl, notification, onClick }) {
+function NotificationItem({ intl, notification, onClick }) {
   const CategoryIcon = getCategoryIcon(notification.category);
   const color = getCategoryColor(notification.category);
   const isUnread = !notification.is_read;
 
   return (
-    <ListItem
-      className={`${classes.item} ${isUnread ? classes.unread : ""}`}
+    <StyledListItem
+      className={isUnread ? "unread" : undefined}
       onClick={() => onClick(notification)}
       dense
     >
-      <ListItemIcon className={classes.categoryIcon}>
+      <ListItemIcon className="categoryIcon">
         <CategoryIcon style={{ color, fontSize: 20 }} />
       </ListItemIcon>
       <ListItemText
         primary={
-          <Typography className={`${classes.title} ${isUnread ? classes.titleUnread : ""}`}>
+          <Typography className={isUnread ? "itemTitle itemTitleUnread" : "itemTitle"}>
             {notification.title}
-            {isUnread && <FiberManualRecordIcon className={classes.unreadDot} />}
+            {isUnread && <FiberManualRecordIcon className="unreadDot" />}
           </Typography>
         }
         secondary={
-          <Typography className={classes.time}>
+          <Typography className="itemTime">
             {formatTimeAgo(notification.created_at, intl)}
           </Typography>
         }
       />
-    </ListItem>
+    </StyledListItem>
   );
 }
 
-export default injectIntl(withStyles(styles)(NotificationItem));
+export default injectIntl(NotificationItem);
