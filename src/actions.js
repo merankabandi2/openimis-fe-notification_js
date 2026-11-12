@@ -1,4 +1,5 @@
 import { baseApiUrl, graphqlWithVariables } from "@openimis/fe-core";
+import { withCsrf } from "./csrf";
 
 const REQUEST = (actionType) => `${actionType}_REQ`;
 const SUCCESS = (actionType) => `${actionType}_RESP`;
@@ -71,7 +72,7 @@ export function markAsRead(notificationId) {
     return fetch(`${baseApiUrl}/notification/${notificationId}/read/`, {
       method: "PATCH",
       credentials: "same-origin",
-      headers: apiHeaders(),
+      headers: withCsrf(apiHeaders()),
     })
       .then((resp) => resp.json())
       .then(() =>
@@ -92,7 +93,7 @@ export function markAllAsRead() {
     return fetch(`${baseApiUrl}/notification/read_all/`, {
       method: "PATCH",
       credentials: "same-origin",
-      headers: apiHeaders(),
+      headers: withCsrf(apiHeaders()),
     })
       .then((resp) => resp.json())
       .then(() =>
@@ -211,7 +212,7 @@ export function updatePreferences(preferences) {
     return fetch(`${baseApiUrl}/notification/preferences/update/`, {
       method: "PUT",
       credentials: "same-origin",
-      headers: apiHeaders(),
+      headers: withCsrf(apiHeaders()),
       body: JSON.stringify(preferences),
     })
       .then((resp) => resp.json())

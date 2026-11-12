@@ -12,7 +12,8 @@
   "scripts": {
     "build": "vite build",
     "start": "vite",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "test": "node --import ./test/support/register.mjs --test test/*.test.mjs"
   },
   "peerDependencies": {
     "@emotion/react": "^11.11.4",
