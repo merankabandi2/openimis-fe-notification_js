@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { withStyles } from "@material-ui/core/styles";
-import { IconButton, Badge, Tooltip, ClickAwayListener } from "@material-ui/core";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import withStyles from '@mui/styles/withStyles';
+import { IconButton, Badge, Tooltip, ClickAwayListener } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationDropdown from "./NotificationDropdown";
 
 const styles = () => ({
@@ -42,7 +42,7 @@ class NotificationBell extends Component {
           <Tooltip
             title={intl.formatMessage({ id: "notification.bell.tooltip" })}
           >
-            <IconButton className={classes.bellButton} onClick={this.handleToggle}>
+            <IconButton className={classes.bellButton} onClick={this.handleToggle} size="large">
               <Badge
                 badgeContent={unreadCount}
                 color="error"

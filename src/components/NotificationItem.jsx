@@ -1,8 +1,8 @@
 import React from "react";
 import { injectIntl } from "react-intl";
-import { withStyles } from "@material-ui/core/styles";
-import { ListItem, ListItemIcon, ListItemText, Typography } from "@material-ui/core";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import withStyles from '@mui/styles/withStyles';
+import { ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { getCategoryIcon, getCategoryColor } from "../utils/categoryIcons";
 
 const styles = (theme) => ({

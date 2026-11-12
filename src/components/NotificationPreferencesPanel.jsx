@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from '@mui/styles/withStyles';
 import {
   Paper,
   Table,
@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
   Button,
-} from "@material-ui/core";
+} from "@mui/material";
 import { CATEGORY_LABELS } from "../constants";
 import { fetchPreferences, updatePreferences } from "../actions";
 

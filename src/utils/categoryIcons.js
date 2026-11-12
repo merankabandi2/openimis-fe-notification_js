@@ -1,9 +1,9 @@
-import PaymentIcon from "@material-ui/icons/Payment";
-import ReportProblemIcon from "@material-ui/icons/ReportProblem";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import PeopleIcon from "@material-ui/icons/People";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import PaymentIcon from "@mui/icons-material/Payment";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import PeopleIcon from "@mui/icons-material/People";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { CATEGORY_COLORS } from "../constants";
 
 const CATEGORY_ICONS = {

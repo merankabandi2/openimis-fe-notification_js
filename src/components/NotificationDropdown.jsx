@@ -1,14 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from '@mui/styles/withStyles';
 import {
   Paper,
   Typography,
   List,
   Divider,
   Link,
-} from "@material-ui/core";
+} from "@mui/material";
 import { withHistory } from "@openimis/fe-core";
 import NotificationItem from "./NotificationItem";
 import { gqlMarkAsRead, gqlMarkAllAsRead } from "../actions";
@@ -94,7 +94,10 @@ function NotificationDropdown({
           {intl.formatMessage({ id: "notification.dropdown.title" })}
         </Typography>
         {hasNotifications && (
-          <Link className={classes.markAllRead} onClick={handleMarkAllRead}>
+          <Link
+            className={classes.markAllRead}
+            onClick={handleMarkAllRead}
+            underline="hover">
             {intl.formatMessage({ id: "notification.dropdown.markAllRead" })}
           </Link>
         )}
